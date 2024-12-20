@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>Login Here</title>
+</head>
+<body class="user-form-body">
+    <div class="container" id="container">
+        <div class="sideinfo-container">
+            <div class="sideinfo">
+                <div class="sideinfo-panel">
+                    <img id="sidepanel-img" src="{% static 'media/sidepanel1.jpg' %}" alt="">
+                    <h1 id="sidepanel-heading" >Welcome!</h1>
+                    <span>Register for free to organize your online resources at one place. Keep away from distraction and save your time.</span>
+                </div>
+            </div>
+        </div>
+        <div class="form-container sign-up">
+            <form class="user-form" method="POST" action="#">
+                {% csrf_token %}
+                <h2 class="form-heading">Log In</h2>
+                <!-- <div class="social-icons">
+                    <div class="social-icons-container">
+                        <a href="" class="user-form-button icon" id="google-icon"><img class="social-icon-img" src="{% static 'media/google.png' %}" alt="Google"><span class="icon-text">Sign up with Google</span></a>
+                    </div>
+                    <div class="social-icons-container">
+                        <a href="#" class="user-form-button icon" id="github-icon"><img class="social-icon-img" src="{% static 'media/github.png' %}" alt="Github"><span class="icon-text">Sign up with Github</span></a>
+                    </div>
+                </div> -->
+                <!-- <div class="or">or</div> -->
+                <input class="user-form-input" type="text" name="username" placeholder="Your Username" required>
+                <input class="user-form-input" type="password" name="password" placeholder="Your Password" required>
+                <div class="form-buttons">
+                    <a href="../" class="user-form-button" id="cancel-button" onclick="redirect_home()">Cancel</a>
+                    <button class="user-form-button" id="signup-button" >Sign In!</button>
+                </div>
+                <p class="user-form-bottom-p">Don't have an account? <a href="../signup" class="signup-link" >Sign Up</a></p>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

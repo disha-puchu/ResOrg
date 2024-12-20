@@ -1,0 +1,646 @@
+{% load static %}
+{% load topicfilter %}
+{% load resorgfilter %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style_new.css' %}">
+    <link rel="icon" href="{% static 'media/profile-page/logo.png' %}" type="image/x-icon"/>
+    <script src="{% static 'js/yt_search.js' %}"></script>
+    <title>Topic</title>
+</head>
+<body id="resorg-container-id">
+    <div class="resorg-container dashboard-container">
+        <div class="resorg-container-header dashboard-header">
+            <div style="display: flex; align-items: center;">
+                <img class="ml-5" height="25" src="{% static 'media/profile-page/logo.png' %}">
+                <span class="logo-name ml-7 mr-5 fw-800 c-9800F3">ResOrg</span>
+            </div>
+            <div class="header-icon-container dashboard-icon-box">
+                <div class="icon-container mr-7 cp" onclick="location.href='../../'" title="Back">
+                    <img height="18" src="{% static 'media/profile-page/left.png' %}">
+                </div>
+                <div class="pd-7 dp-flex ai-c br-5 ml-5 mr-5 bc-9800F3 cp" title="Add Sections" onclick="open_popup('createsection-popup-id')">
+                    <img height="18" src="{% static 'media/topic-page/add_section.png' %}">
+                </div>
+                <div class="pd-7 dp-flex ai-c jc-c br-5 ml-5 mr-5 bc-9800F3 cp" style="z-index: 100;" title="Add Resources">
+                    <img class="dropbtn" height="19" src="{% static 'media/profile-page/add_res.png' %}" onclick="show_add_menu_dropdown()">
+                </div>
+            </div>  
+            <div class="search-box dashboard-search-box ml-10 pd-10 w-100p br-5 dp-f ai-c">
+                {% comment %}
+                <img class="ml-5" height="18" src="{% static 'media/profile-page/search.png' %}">
+                <select class="ml-7 bn-on" style="background-color: transparent; margin-left: 10px;" name="type">
+                    <option>Youtube</option>
+                    <option>Prompt</option>
+                </select>
+                <form action="search/" method="post" style="display: flex; width: 100%;">
+                    {% csrf_token %}
+                <input class="h-100p w-100p ml-10 bn-on bct" id="query" type="search" name="search" placeholder="Search anything you want" onkeypress="enterQuery(event)" autofocus required>
+                <input class="fw-600 ml-10 h-100p mr-5 bct bn c-9800F3 cp" type="submit" value="Search">
+                </form>
+                {% endcomment %}
+            </div>       
+            <div class="header-icon-container account-icon-box">
+                <div class="logo" id="logo">
+                    {{picpath}}
+                    {% if picpath == '' %}
+                    <img class="dropbtn" id="nav-account-logo" src="{% static 'media/user.png' %}" onclick="show_account_dropdown()">
+                    {% else %}
+                    <img class="dropbtn" id="nav-account-logo" src="/media/{{user.id}}/profile/{{topic_info.picpath}}" onclick="show_account_dropdown()">
+                    {% endif %}
+                </div>
+            </div>   
+        </div>
+        <div class="header-dropdown-menu topic-add-menu" id="dropdown-add-menu-id">
+            <a href="?addfile=doc">
+                <div class="dropdown-menu-item"><img class="dropdown-menu-icon" src="{% static 'media/topic-page/docs.png' %}">Document</div>
+            </a>
+            <a href="?addfile=pdf">
+                <div class="dropdown-menu-item"><img class="dropdown-menu-icon" src="{% static 'media/topic-page/pdf.png' %}">PDF File</div>
+            </a>
+            <a href="?addfile=ppt">
+                <div class="dropdown-menu-item"><img class="dropdown-menu-icon" src="{% static 'media/topic-page/ppt.png' %}">Presentation</div>
+            </a>
+            <a href="?addfile=img">
+                <div class="dropdown-menu-item"><img class="dropdown-menu-icon" src="{% static 'media/topic-page/image.png' %}">Picture</div>
+            </a>            
+            <div class="dropdown-menu-item" onclick="open_popup('addweblink-popup-id')">
+                <img class="dropdown-menu-icon" src="{% static 'media/topic-page/weblink.png' %}">Web Links
+            </div>
+            <div class="dropdown-menu-item" onclick="open_popup('addytlink-popup-id')">
+                <img class="dropdown-menu-icon" src="{% static 'media/topic-page/ytlink.png' %}">Youtube Link
+            </div>
+        </div>
+        <div class="dropdown-account dashboard-dropdown-account" id="dropdown-account-id">
+            <a class="dropdown-link" onclick="location.href='../../profile'"><img class="dropdown-link-icon" src="{% static 'media/profile.png' %}">Profile</a>
+            <hr style="color: whitesmoke;">
+            <a class="dropdown-link" onclick="open_popup('logoutmsg-popup-id')"><img class="dropdown-link-icon" src="{% static 'media/logout.png' %}">Logout</a>
+        </div>
+        <div class="resorg-container-body">
+            <div class="dashboard-left-section">
+                <div class="left-section-box">
+                    <div class="dp-f ai-c pd-10 bc-9800F3" style="display: flex; justify-content: space-between;">
+                        <div class="profile-name ml-10 fw-600">
+                            Important To-dos!
+                        </div>
+                        <div class="cp" onclick="open_popup('createtodo-popup-id')">
+                            <img height="18" src="{% static 'media/sidebar-feature/add_todo.png' %}">
+                        </div>
+                    </div> 
+                    <div style="height: 260px; padding: 10px; overflow-y: auto;" id="todo-scroll">
+                        {% if todo_list %}
+                            {% for tdid, todo in todo_list.items %}
+                                <div class="todo-list-item">
+                                    <!-- <div class="list-item-icon" id="item-check"><input type="checkbox" class="todo-checkbox"></div> -->
+                                    <a href = "todonote/checktodo/{{tdid}}/" class="list-item-icon" id="item-check">
+                                        {% if todo.1 == 0 %}
+                                            <input type="checkbox" class="todo-checkbox">
+                                        {% else %}
+                                            <input type="checkbox" class="todo-checkbox" checked>
+                                        {% endif %}
+                                    </a>
+                                    <div class="list-item-text" style="word-break: break-all;">{{todo.0}}</div>
+                                    <a href="todonote/deletetodo/{{tdid}}/">
+                                        <div class="list-item-icon" id="item-delete">
+                                            <img id="item-icon-delete" src="{% static 'media/sidebar-feature/delete_item.png' %}" alt="">
+                                        </div>
+                                    </a>
+                                    <a href="?edittodo={{tdid}}">
+                                        <div class="list-item-icon" id="item-edit" onclick="open_popup('edittodo-popup-id')">
+                                            <img id="item-icon-edit" src="{% static 'media/sidebar-feature/edit_item.png' %}" alt="">
+                                        </div>
+                                    </a>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            Empty
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="left-section-box">
+                    <div class="dp-f ai-c pd-10 bc-9800F3" style="display: flex; justify-content: space-between;">
+                        <div class="profile-name ml-10 fw-600">
+                            Important Notes!
+                        </div>
+                        <div style="display: flex; width: 50px; justify-content: space-between;">
+                            <a href="?editnote">
+                                <div class="cp" onclick="open_popup('editnote-popup-id')">
+                                    <img height="18" src="{% static 'media/sidebar-feature/edit_note.png' %}">
+                                </div>
+                            </a>
+                            <a href="todonote/clearnote/">
+                                <div class="cp">
+                                    <img height="18" src="{% static 'media/sidebar-feature/clear_note.png' %}">
+                                </div>
+                            </a>
+                        </div>
+                    </div> 
+                    <div style="height: 260px; padding: 10px; overflow-y: auto;" id="todo-scroll">
+                        {{notedata.0}}
+                    </div>
+                </div>
+            </div>
+            <div class="right-section dashboard-right-section" id="dashboard-scroll">
+                {% comment %}
+                {% if search_results is not None %}
+                    <div id="yt-result-container">
+                        <button id="close-yt-search-container" onclick="closeYTResultContainer()">Close</button>
+                        <div class="yt-search-results" id="yt-results">
+                            {% for result in search_results %}
+                                <div class="yt-search-card">
+                                    <div class="yt-card-video">
+                                        <iframe class="item-ytplayer" width="350" height="200" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="encrypted-media; autoplay; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin">
+                                        </iframe>
+                                    </div>
+                                    <div class="yt-card-info">
+                                        <div class="yt-card-info-title">{{result.title}}</div>
+                                        <div class="yt-card-info-stats">{{result.viewCount}} views <span class="yt-card-info-stats-period">•</span> {{result.publishedAt}}</div>
+                                        <div class="yt-card-info-channel">
+                                            <div><img class="yt-card-info-channel-profile" src="${channelIcon}"></div>
+                                            <div class="yt-card-info-channel-name">{{result.channelTitle}}</div>
+                                        </div>
+                                        <div class="yt-card-info-desc">{{result.description}}</div>
+                                        <div class="yt-card-info-interaction"> 
+                                            <button class="yt-card-info-button"><img class="yt-card-info-button-icon" src="{% static 'media/plus.png' %}">Add to Topic</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="yt-search-results-footer">
+                            <button id="yt-result-prev-button" onclick="handlePrevPage()" disabled>Previous</button>
+                            <button id="yt-result-next-button" onclick="handleNextPage()" disabled>Next</button>
+                        </div>
+                    </div>
+                {% endif %}
+                {% endcomment %}
+                {% if section_info|length == 0 %}
+                    <div class="group-header-container">
+                        <h3 class="group-header">No sections found!</h3>
+                    </div>
+                {% else %}
+                    {% for sid, sinfo in section_info.items %}
+                        <div class="group-container">
+                            <div class="group-header-container">
+                                <h3 class="group-header" title="{{sinfo.1}}">{{sinfo.0}}</h3>
+                                <div class="group-edit-delete">
+                                    <a href="?renamesection={{sid}}"><img class="group-edit-icon" src="{% static 'media/topic-group/edit.png' %}"></a>
+                                    <a href="?deletesection={{sid}}"><img class="group-delete-icon" src="{% static 'media/topic-group/delete.png' %}"></a>
+                                </div>
+                            </div>
+                            <div class="group-items">
+                                {% with res_list_persec=resource_info|get_dict_val:sid %}
+                                    {% if res_list_persec %}
+                                        {% for rid, resource in res_list_persec.items %}
+                                            <div class="item-box {% if resource.2 == 'ytlink' %}yt-link-box{%endif%}" ondblclick="location.href='view/{{rid}}/'">
+                                                {% if resource.2 == 'weblink' %}
+                                                    <div class="item-delete-sec">
+                                                        <a href="?editlink={{rid}}?sid={{sid}}?type=web"><img class="item-edit-icon" src="{% static 'media/topic-group/edit.png' %}"></a>
+                                                        <a href="?deletelink={{rid}}"><img class="item-delete-icon" src="{% static 'media/topic-group/delete.png' %}"></a>
+                                                    </div>
+                                                    <a href="{{resource.1}}" target="_blank">
+                                                        <div class="item-box-icon">
+                                                            <img class="item-icon-img" src="{% static 'media/topic-page/weblink.png' %}" alt="">
+                                                        </div>
+                                                    </a>
+                                                {% elif resource.2 == 'doc' %}
+                                                    <div class="item-delete-sec">
+                                                        <a href="?editfile={{rid}}?sid={{sid}}"><img class="item-edit-icon" src="{% static 'media/topic-group/edit.png' %}"></a>
+                                                        <a href="?deletefile={{rid}}"><img class="item-delete-icon" src="{% static 'media/topic-group/delete.png' %}"></a>
+                                                    </div>
+                                                    <a href="ms-word:ofe|u|http://127.0.0.1:8000/media/{{user.id}}/workspace/{{resource.1}}">
+                                                        <div class="item-box-icon">
+                                                            <img class="item-icon-img" src="{% static 'media/topic-page/docs.png' %}" alt="">
+                                                        </div>
+                                                    </a>
+                                                {% elif resource.2 == 'pdf' %}
+                                                    <div class="item-delete-sec">
+                                                        <a href="?editfile={{rid}}?sid={{sid}}"><img class="item-edit-icon" src="{% static 'media/topic-group/edit.png' %}"></a>
+                                                        <a href="?deletefile={{rid}}"><img class="item-delete-icon" src="{% static 'media/topic-group/delete.png' %}"></a>
+                                                    </div>
+                                                    <a href="http://127.0.0.1:8000/media/{{user.id}}/workspace/{{resource.1}}" target="_blank">
+                                                        <div class="item-box-icon">
+                                                            <img class="item-icon-img" src="{% static 'media/topic-page/pdf.png' %}" alt="">
+                                                        </div>           
+                                                    </a>
+                                                {% elif resource.2 == 'ppt' %}
+                                                    <div class="item-delete-sec">
+                                                        <a href="?editfile={{rid}}?sid={{sid}}"><img class="item-edit-icon" src="{% static 'media/topic-group/edit.png' %}"></a>
+                                                        <a href="?deletefile={{rid}}"><img class="item-delete-icon" src="{% static 'media/topic-group/delete.png' %}"></a>
+                                                    </div>
+                                                    <a href="ms-powerpoint:ofe|u|http://127.0.0.1:8000/media/{{user.id}}/workspace/{{resource.1}}">
+                                                        <div class="item-box-icon">
+                                                            <img class="item-icon-img" src="{% static 'media/topic-page/ppt.png' %}" alt="">
+                                                        </div>      
+                                                    </a> 
+                                                {% elif resource.2 == 'img' %}
+                                                    <div class="item-delete-sec">
+                                                        <a href="?editfile={{rid}}?sid={{sid}}"><img class="item-edit-icon" src="{% static 'media/topic-group/edit.png' %}"></a>
+                                                        <a href="?deletefile={{rid}}"><img class="item-delete-icon" src="{% static 'media/topic-group/delete.png' %}"></a>
+                                                    </div>
+                                                    <div class="item-box-icon item-box-icon-img">
+                                                        <img src="/media/{{user.id}}/workspace/{{resource.1}}">
+                                                    </div>                        
+                                                {% elif resource.2 == 'ytlink' %}
+                                                    <div class="item-delete-sec">
+                                                        <a href="?editlink={{rid}}?sid={{sid}}?type=yt"><img class="item-edit-icon" src="{% static 'media/topic-group/edit.png' %}"></a>
+                                                        <a href="?deletelink={{rid}}"><img class="item-delete-icon" src="{% static 'media/topic-group/delete.png' %}"></a>
+                                                    </div>
+                                                    <!-- <a href="{{resource.1}}" target="_blank" > -->
+                                                        <div class="item-box-icon">
+                                                            <iframe class="item-ytplayer" width="130" height="80" src="{{resource.1}}" frameborder="0" 
+                                                            allow="encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                                            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen disabled>
+                                                            </iframe>
+                                                        </div>
+                                                    <!-- </a> -->
+                                                {% endif %}
+                                                <div class="item-box-title">
+                                                    <span class="item-title-span" title="{{resource.0}}">{{resource.0}}</span>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        No resources found!
+                                    {% endif %}
+                                {% endwith %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="popup hide" id="createsection-popup-id">
+        <div class="screen-blur"></div>
+        <div class="popup-dialog" id="section-dialog-id">
+            <div class="dialog-container">
+                <div class="dialog-top">
+                    <div class="dialog-icon">
+                        <img height="30" src="{% static 'media/add_group.png' %}" alt="Dialog Icon">
+                    </div>
+                    <div class="dialog-title">
+                        <span id="form-title">Organize you stuff!</span>
+                    </div>
+                </div>
+                <div class="dialog-bottom">
+                    <form class="dialog-form" action="createsection/" method="post">
+                        {% csrf_token %}
+                        <input type="text" class="dialog-form-input" name="name" placeholder="Section Name">
+                        <input type="text" class="dialog-form-input" name="desc" placeholder="Section Description">
+                        <div class="dialog-button-section">
+                            <button type="button" id="dialog-button" onclick="close_popup('createsection-popup-id')">Cancel</button>
+                            <button id="dialog-button">Create</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="popup hide" id="logoutmsg-popup-id">
+        <div class="screen-blur"></div>
+        <div class="popup-dialog" id="logout-dialog-id">
+            <div class="dialog-container">
+                <div class="dialog-top">
+                    <div class="dialog-icon">
+                        <img height="30" src="{% static 'media/warning.png' %}" alt="Dialog Icon">
+                    </div>
+                    <div class="dialog-title">
+                        <span id="form-title">Do you want to logout?</span>
+                    </div>
+                </div>
+                <div class="dialog-bottom">
+                    <div class="dialog-form" action="#" method="post">
+                        <div class="dialog-button-section">
+                            <button type="button" id="dialog-button" onclick="close_popup('logoutmsg-popup-id')">Cancel</button>
+                            <a href="/signout" id="dialog-button" onclick="redirect_logout()">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if request.GET.renamesection is not None %}
+        <div class="popup" id="renamesection-popup-id">
+            <div class="screen-blur"></div>
+            <div class="popup-dialog" id="renameitem-dialog-id">
+                <div class="dialog-container">
+                    <div class="dialog-bottom">
+                        <form class="dialog-form" action="renamesection/{{request.GET.renamesection}}/" method="post">
+                            {% csrf_token %}
+                            {% with section=section_info|get_dict_val:request.GET.renamesection %}
+                                <input type="text" class="dialog-form-input" name="name" placeholder="Rename Section" value="{{section.0}}" required>
+                                <input type="text" class="dialog-form-input" name="desc" placeholder="Update Section Description" value="{{section.1}}">
+                            {% endwith %}
+                            <div class="dialog-button-section">
+                                <a href="/dashboard/{{topic_info.uid}}/topic/{{topic_info.tid}}/"><button type="button" id="dialog-button">Cancel</button></a>
+                                <button id="dialog-button">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if request.GET.deletesection is not None %}
+        <div class="popup" id="deletesection-popup-id">
+            <div class="screen-blur"></div>
+            <div class="popup-dialog" id="deleteitem-dialog-id">
+                <div class="dialog-container">
+                    <div class="dialog-top">
+                        <div class="dialog-icon">
+                            <img height="30" src="{% static 'media/warning.png' %}" alt="Dialog Icon">
+                        </div>
+                        <div class="dialog-title">
+                            <span id="form-title">Do you want to delete group? <strong>All your resources will be lost.</strong></span>
+                        </div>
+                    </div>
+                    <div class="dialog-bottom">
+                        <div class="dialog-form" action="#" method="post">
+                            <div class="dialog-button-section">
+                                <a href="/dashboard/{{topic_info.uid}}/topic/{{topic_info.tid}}/"><button type="button" id="dialog-button">Cancel</button></a>
+                                <a href="deletesection/{{request.GET.deletesection}}"><button id="dialog-button">Delete</button></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if request.GET.deletelink is not None %}
+        <div class="popup" id="deletelink-popup-id">
+            <div class="screen-blur"></div>
+            <div class="popup-dialog" id="deleteitem-dialog-id">
+                <div class="dialog-container">
+                    <div class="dialog-top">
+                        <div class="dialog-icon">
+                            <img height="30" src="{% static 'media/warning.png' %}" alt="Dialog Icon">
+                        </div>
+                        <div class="dialog-title">
+                            <span id="form-title">Do you want to delete this link?</span>
+                        </div>
+                    </div>
+                    <div class="dialog-bottom">
+                        <div class="dialog-form" action="#" method="post">
+                            <div class="dialog-button-section">
+                                <a href="/dashboard/{{topic_info.uid}}/topic/{{topic_info.tid}}/"><button type="button" id="dialog-button">Cancel</button></a>
+                                <a href="deletelink/{{request.GET.deletelink}}"><button id="dialog-button">Delete</button></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if request.GET.editlink is not None %}
+        <div class="popup" id="editlink-popup-id">
+            <div class="screen-blur"></div>
+            <div class="popup-dialog" id="renameitem-dialog-id">
+                <div class="dialog-container">
+                    <div class="dialog-bottom">
+                        {% with link=request.GET.editlink %}
+                            {% with param_list=link|get_url_params %}
+                                <form class="dialog-form" action="{%if param_list.type == 'web'%}editweblink{%else%}editytlink{%endif%}/{{param_list.sid}}/{{param_list.rid}}/" method="post">
+                                    {% csrf_token %}
+                                    <input type="text" class="dialog-form-input" name="name" placeholder="Rename Weblink Link" value="{% get_res resource_info param_list.sid param_list.rid 0 %}">
+                                    <select class="dialog-form-input" name="sid">
+                                        {% for sid, sinfo in section_info.items %}
+                                            {% if sid == param_list.sid|to_int %}
+                                                <option value="{{sid}}" selected>{{sinfo.0}}</option>
+                                            {% else %}
+                                                <option value="{{sid}}">{{sinfo.0}}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                    <input type="url" class="dialog-form-input" name="url" placeholder="Update Web Link" value="{% get_res resource_info param_list.sid param_list.rid 1 %}">       
+                                    <div class="dialog-button-section">
+                                        <a href="/dashboard/{{topic_info.uid}}/topic/{{topic_info.tid}}/"><button type="button" id="dialog-button">Cancel</button></a>
+                                        <button id="dialog-button">Save</button>
+                                    </div>
+                                </form>
+                            {% endwith %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if request.GET.addfile is not None %}
+        <div class="popup" id="addfile-popup-id">
+            <div class="screen-blur"></div>
+            <div class="popup-dialog" id="addfile-dialog-id">
+                <div class="dialog-container">
+                    <div class="dialog-bottom">
+                        <form class="dialog-form" action="addresource/{{request.GET.addfile}}/" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <input type="text" class="dialog-form-input" name="name" placeholder="Your Topic Name" required>
+                            <select class="dialog-form-input" name="sid" required>
+                                {% for sid, sinfo in section_info.items %}
+                                    <option value="{{sid}}">{{sinfo.0}}</option>
+                                {% endfor %}
+                            </select>
+                            {% if request.GET.addfile == 'doc' %}
+                                <label for="" style="margin-top: 20px; margin-bottom: 5px;">Select Document</label>
+                                <input type="file" name="filepath" class="dialog-form-input" accept=".doc, .docx" style="margin-top: 0;" required>
+                            {% elif request.GET.addfile == 'pdf' %}
+                                <label for="" style="margin-top: 20px; margin-bottom: 5px;">Select PDF File</label>
+                                <input type="file" name="filepath" class="dialog-form-input" accept=".pdf" style="margin-top: 0;" required>
+                            {% elif request.GET.addfile == 'ppt' %}
+                                <label for="" style="margin-top: 20px; margin-bottom: 5px;">Select Presentation File</label>
+                                <input type="file" name="filepath" class="dialog-form-input" accept=".ppt, .pptx" style="margin-top: 0;" required>
+                            {% elif request.GET.addfile == 'img' %}
+                                <label for="" style="margin-top: 20px; margin-bottom: 5px;">Select Picture</label>
+                                <input type="file" name="filepath" class="dialog-form-input" accept="image/*" style="margin-top: 0;" required>
+                            {% endif %}
+                            <div class="dialog-button-section">
+                                <a href="/dashboard/{{topic_info.uid}}/topic/{{topic_info.tid}}/"><button type="button" id="dialog-button">Cancel</button></a>
+                                <a href=""><button id="dialog-button">Add</button></a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if request.GET.deletefile is not None %}
+        <div class="popup" id="deletefile-popup-id">
+            <div class="screen-blur"></div>
+            <div class="popup-dialog" id="deleteitem-dialog-id">
+                <div class="dialog-container">
+                    <div class="dialog-top">
+                        <div class="dialog-icon">
+                            <img height="30" src="{% static 'media/warning.png' %}" alt="Dialog Icon">
+                        </div>
+                        <div class="dialog-title">
+                            <span id="form-title">Do you want to delete this item?</span>
+                        </div>
+                    </div>
+                    <div class="dialog-bottom">
+                        <div class="dialog-form" action="#" method="post">
+                            <div class="dialog-button-section">
+                                <a href="/dashboard/{{topic_info.uid}}/topic/{{topic_info.tid}}/"><button type="button" id="dialog-button">Cancel</button></a>
+                                <a href="deletefile/{{request.GET.deletefile}}"><button id="dialog-button">Delete</button></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if request.GET.editfile is not None %}
+        <div class="popup" id="editfile-popup-id">
+            <div class="screen-blur"></div>
+            <div class="popup-dialog" id="renameitem-dialog-id">
+                <div class="dialog-container">
+                    <div class="dialog-bottom">
+                        {% with link=request.GET.editfile %}
+                            {% with param_list=link|get_url_params %}
+                                <form class="dialog-form" action="editfile/{{param_list.rid}}/" method="post">
+                                    {% csrf_token %}
+                                    <input type="text" class="dialog-form-input" name="name" placeholder="Rename File Name" value="{% get_res resource_info param_list.sid param_list.rid 0 %}">
+                                    <select class="dialog-form-input" name="sid">
+                                        {% for sid, sinfo in section_info.items %}
+                                            {% if sid == param_list.sid|to_int %}
+                                                <option value="{{sid}}" selected>{{sinfo.0}}</option>
+                                            {% else %}
+                                                <option value="{{sid}}">{{sinfo.0}}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                    <div class="dialog-button-section">
+                                        <a href="/dashboard/{{topic_info.uid}}/topic/{{topic_info.tid}}/"><button type="button" id="dialog-button">Cancel</button></a>
+                                        <button id="dialog-button">Save</button>
+                                    </div>
+                                </form>
+                            {% endwith %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="popup hide" id="addweblink-popup-id">
+        <div class="screen-blur"></div>
+        <div class="popup-dialog" id="addweblink-dialog-id">
+            <div class="dialog-container">
+                <div class="dialog-bottom">
+                    <form class="dialog-form" action="addresource/web/" method="post">
+                        {% csrf_token %}
+                        <input type="text" class="dialog-form-input" name="name" placeholder="Your Topic Name" required>
+                        <select class="dialog-form-input" name="sid">
+                            {% for sid, sinfo in section_info.items %}
+                                <option value="{{sid}}">{{sinfo.0}}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="url" class="dialog-form-input" name="url" placeholder="Your Website URL" required>
+                        <div class="dialog-button-section">
+                            <button type="button" id="dialog-button" onclick="close_addweblink_dialog()">Cancel</button>
+                            <a href=""><button id="dialog-button">Add</button></a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="popup hide" id="addytlink-popup-id">
+        <div class="screen-blur"></div>
+        <div class="popup-dialog" id="addytlink-dialog-id">
+            <div class="dialog-container">
+                <div class="dialog-bottom">
+                    <form class="dialog-form" action="addresource/yt/" method="post">
+                        {% csrf_token %}
+                        <input type="text" class="dialog-form-input" name="name" placeholder="Your Topic Name" required>
+                        <select class="dialog-form-input" name="sid">
+                            {% for sid, sinfo in section_info.items %}
+                                <option value="{{sid}}">{{sinfo.0}}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="url" class="dialog-form-input" name="url" placeholder="Your Youtube URL" required>
+                        <div class="dialog-button-section">
+                            <button type="button" id="dialog-button" onclick="close_addytlink_dialog()">Cancel</button>
+                            <a href=""><button id="dialog-button">Add</button></a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="popup hide" id="createtodo-popup-id">
+        <div class="screen-blur"></div>
+        <div class="popup-dialog" id="createtodo-dialog-id">
+            <div class="dialog-container">
+                <div class="dialog-bottom">
+                    <form class="dialog-form" action="todonote/createtodo/" method="post">
+                        {% csrf_token %}
+                        <input type="text" name="todo" class="dialog-form-input" placeholder="Write your to-do" required>
+                        <div class="dialog-button-section">
+                            <button type="button" id="dialog-button" onclick="close_popup('createtodo-popup-id')">Cancel</button>
+                            <button id="dialog-button">Create</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if request.GET.edittodo is not None %}
+    <div class="popup" id="edittodo-popup-id">
+        <div class="screen-blur"></div>
+        <div class="popup-dialog" id="edittodo-dialog-id">
+            <div class="dialog-container">
+                <div class="dialog-bottom">
+                    <form class="dialog-form" action="todonote/edittodo/{{request.GET.edittodo}}/" method="post">
+                        {% csrf_token %}
+                        {% with todo=todo_list|get_dict_val:request.GET.edittodo %}
+                            <input type="text" name="todo" class="dialog-form-input" placeholder="Edit your to-do" value="{{todo.0}}" required>
+                        {% endwith %}
+                        <div class="dialog-button-section">
+                            <a href="/dashboard/{{user.id}}/"><button type="button" id="dialog-button">Cancel</button></a>
+                            <button id="dialog-button">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if request.GET.editnote is not None %}
+        <div class="popup" id="editnote-popup-id">
+            <div class="screen-blur"></div>
+            <div class="popup-dialog" id="editnote-dialog-id">
+                <div class="dialog-container">
+                    <div class="dialog-bottom">
+                        <form class="dialog-form" action="todonote/editnote/" method="post">
+                            {% csrf_token %}
+                            <textarea  style="height: 100px; resize: none;" type="text" name="note" class="dialog-form-input" placeholder="Write your to-do" required>{% if notedata.0 != 'Empty' %}{{notedata.0}}{% endif %}</textarea>
+                            <div class="dialog-button-section">
+                                <button type="button" id="dialog-button" onclick="close_popup('editnote-popup-id')">Cancel</button>
+                                <button id="dialog-button">Create</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>

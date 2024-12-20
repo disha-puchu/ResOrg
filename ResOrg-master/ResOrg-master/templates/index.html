@@ -1,0 +1,322 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="icon" href="{% static 'media/folder.png' %}" type="image/x-icon">
+    <title>ResOrg | Welcome</title>
+</head>
+<body onscroll="animate_header()" class="bodyhome">
+    <nav class="header-container" id="hero-nav">
+        <div class="nav-container">
+            <a class="logo" id="logo" href="/">
+                <img height="25px" src="{% static 'media/logo.png' %}" alt="ResOrg">
+            </a>
+            <ul class="navlist">
+                <li><a href="#hero">Home</a></li>
+                <li><a href="#guide">Guide</a></li>
+                <li><a href="#feedback">Feedback</a></li>
+                <li><a href="#developer">Developer</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="header-button">
+                {% if user.is_authenticated %}
+                    <a href="/signout" id="home-signup-button">Logout</a>
+                {% else %}
+                    <button id="home-signin-button" onclick="redirect_signin()">Sign in</button>
+                    <button id="home-signup-button" onclick="redirect_signup()">Sign up</button>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    <section class="hero-section" id="hero">
+        <div class="hero-outer-container">
+            <div class="hero-container">
+                <div class="hero-left-section">
+                    <div class="hero-left-container" >
+                        <div class="big-text-section">
+                            <span id="big-text">
+                                Design. <br>
+                                Development. <br>
+                                Hosting.
+                            </span>
+                        </div>
+                        <div class="small-text-section">
+                            <span id="small-text">
+                                A small river named Duden flows by their place and supplies it with the necessary regelialia.
+                            </span>
+                        </div>
+                        <div class="click-section" >
+                            {% if user.is_authenticated %}
+                                <a href="/dashboard/{{user.id}}" id="get-started-click">Go to Dashboard</a>    
+                            {% else %}
+                                <a href="/dashboard/" id="get-started-click">Get Started</a>    
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-right-section">
+                    <div class="hero-image-container">
+                        <img id="hero-image" src="{% static 'media/sidepanel2.png' %}" alt="Hero">
+                    </div>
+                </div>     
+            </div>
+            <div class="hero-property-container">
+                <div class="hero-property-section">
+                    <div class="property-logo-box">
+                        <img id="property-logo" src="{% static 'media/idea.png' %}" alt="">
+                    </div>
+                    <div class="property-text-box">
+                        <span id="property-text">
+                            Unify Thoughts
+                        </span>
+                    </div>
+                </div>
+                <div class="hero-property-section">
+                    <div class="property-logo-box">
+                        <img id="property-logo" src="{% static 'media/notes.png' %}" alt="">
+                    </div>
+                    <div class="property-text-box">
+                        <span id="property-text">
+                            Make Notes
+                        </span>
+                    </div>
+                </div>
+                <div class="hero-property-section">
+                    <div class="property-logo-box">
+                        <img id="property-logo" src="{% static 'media/document.png' %}" alt="">
+                    </div>
+                    <div class="property-text-box">
+                        <span id="property-text">
+                            Various Resources
+                        </span>
+                    </div>
+                </div>
+                <div class="hero-property-section">
+                    <div class="property-logo-box">
+                        <img id="property-logo" src="{% static 'media/folder.png' %}" alt="">
+                    </div>
+                    <div class="property-text-box">
+                        <span id="property-text">
+                            Organize Items
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div> 
+    </section>
+    <section class="guide-section" id="guide">
+
+    </section>
+    <section class="feedback-section" id="feedback">
+        <div class="feedback-section-container">
+            <div class="feedback-section-header">
+                <span>Feedback</span>
+            </div>
+            <div class="feedback-form-container">
+                <div class="feedback-form-left">
+                    <form action="" method="">
+                        <div class="feedback-form-row">
+                            <div class="feedback-form-col">
+                                <label for="fullname">Full Name</label>
+                                <input id="feedback-input" type="text" name="fullname" placeholder="Your full name.">
+                            </div>
+                            <div class="feedback-form-col">
+                                <label for="country">User Interface</label>
+                                <select id="feedback-input" style="width: 100%;">
+                                    <option style="width: 100%;" value="Good">Good</option>
+                                    <option value="Average">Average</option>
+                                    <option value="Bad">Bad</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="feedback-form-row">
+                            <div class="feedback-form-col">
+                                <label for="country">Simplicity</label>
+                                    <select id="feedback-input" style="width: 100%;">
+                                    <option value="Very Easy">Very Easy</option>
+                                    <option value="Understandable">Understandable</option>
+                                    <option value="Very Hard">Very Hard</option>
+                                </select>
+                            </div>
+                            <div class="feedback-form-col">
+                                <label for="country">Performance</label>
+                                <select id="feedback-input">
+                                    <option value="Good">Good</option>
+                                    <option value="Average">Average</option>
+                                    <option value="Bad">Bad</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="feedback-form-row">
+                            <div class="feedback-form-col">
+                                <label for="country">Features</label>
+                                <select id="feedback-input">
+                                    <option value="Enough">Enough</option>
+                                    <option value="Insufficient">Insufficient</option>
+                                    <option value="Need More">Need More</option>
+                                </select>
+                            </div>
+                            <div class="feedback-form-col">
+                                <label for="country">Rate your experience</label>
+                                <select id="feedback-input">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </div>
+                        </div>
+                        <label for="subject">Suggestions</label>
+                        <textarea id="feedback-input" name="subject" placeholder="Write something.." style="height:100px; resize: none;"></textarea>
+                        <input id="feedback-submit" type="submit" value="Submit">
+                    </form>
+                </div>
+                <div class="feedback-form-right">
+                    <div class="feedback-image-container">
+                        <img id="hero-image" height="100" src="{% static 'media/feedback.png' %}" alt="Hero">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="developer-section" id="developer">
+        <div class="developer-section-container">
+            <div class="developer-section-header">
+                <span>Developer</span>
+            </div>
+            <div class="developer-section-profile">
+                <div class="developer-profile">
+                    <img id="developer-profile-image" src="{% static 'media/developer.png' %}" alt="Profile">
+                </div>
+                <div class="developer-profile-data">
+                    <div class="profile-data-block">
+                        <div class="profile-data">
+                            <span id="profile-data-name">Santanu Pradhan</span>
+                        </div>
+                        <div class="profile-data" id="profile-role-id">
+                            <span id="profile-data-role">Full-Stack Developer</span>
+                        </div>
+                        <div class="profile-data" id="profile-about-id">
+                            <span id="profile-data-about">Lorem ipsum dolor sit amet, consec tetur adipisicing elit, sed do eiusmod tempor incididuntut consec tetur adipisicing elit,Lorem ipsum dolor sit amet.</span>
+                        </div>
+                        <div>
+                            
+                        </div>
+                        <div class="profile-data" id="profile-data-links">
+                            <div id="profile-data-social">
+                                <img id="data-social-logo" src="{% static 'media/social_linkedin.png' %}" alt="Linkedin">
+                            </div>
+                            <div id="profile-data-social">
+                                <img id="data-social-logo" src="{% static 'media/social_github.png' %}" alt="Github">
+                            </div>
+                            <div id="profile-data-social">
+                                <img id="data-social-logo" src="{% static 'media/social_instagram.png' %}" alt="Instagram">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="contact-section" id="contact">
+        <div class="contact-section-container">
+            <div class="contact-top-section">
+                <div class="contact-box">
+                    <div class="contact-logo">
+                        <img id="contact-logo-icon" src="{% static 'media/location.png' %}" alt="">
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-info-head">
+                            <span id="contact-info-span">Address</span>
+                        </div>
+                        <div class="contact-info-data">
+                            <span id="contact-data-span">Sambalpur, Odisha</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-box" id="contact-info-id">
+                    <div class="contact-logo">
+                        <img id="contact-logo-icon" src="{% static 'media/phone.png' %}" alt="">
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-info-head">
+                            <span id="contact-info-span">Contact</span>
+                        </div>
+                        <div class="contact-info-data">
+                            <span id="contact-data-span">+91 6372488789</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-box">
+                    <div class="contact-logo">
+                        <img id="contact-logo-icon" src="{% static 'media/email.png' %}" alt="">
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-info-head">
+                            <span id="contact-info-span">Email</span>
+                        </div>
+                        <div class="contact-info-data">
+                            <span id="contact-data-span">shantanup246@gmail.com</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="contact-bottom-section">
+                <div class="contact-bottom-subsection">
+                    <div class="bottom-subsection-head">
+                        <span id="bottom-subsection-logo-name"><a href="/">ResOrg.</a></span>
+                    </div>
+                    <div class="bottom-subsection-data">
+                        <span>Lorem ipsum dolor sit amet, consec tetur adipisicing elit, sed do eiusmod tempor incididuntut consec tetur adipisicing elit,Lorem ipsum dolor sit amet.</span>
+                    </div>
+                </div>
+                <div class="contact-bottom-subsection" id="link-subsection">
+                    <div class="bottom-subsection-head">
+                        <span>Site Links</span>
+                    </div>
+                    <div class="bottom-subsection-data">
+                        <table width="100%">
+                            <tr>
+                                <td><a id="data-link" href="#">Home</a></td>
+                                <td><a id="data-link" href="#">Guide</a></td>
+                            </tr>
+                            <tr>
+                                <td><a id="data-link" href="#">Feedback</a></td>
+                                <td><a id="data-link" href="#">Developer</a></td>
+                            </tr>
+                            <tr>
+                                <td><a id="data-link" href="#">Sign up</a></td>
+                                <td><a id="data-link" href="#">Contact</a></td>
+                            </tr>
+                            <tr>
+                                <td><a id="data-link" href="#">Sign in</a></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="contact-bottom-subsection" id="subscribe-subsection">
+                    <div class="bottom-subsection-head">
+                        <span>Subscribe</span>
+                    </div>
+                    <div class="bottom-subsection-data">
+                        <span>Subscribe to receive updates about features. Kindly fill the form.</span>
+                    </div>
+                    <div >
+                        <form action="" method="" class="bottom-subsection-form">
+                            <input id="subsection-form-input" type="email">
+                            <button id="subsection-form-submit" type="submit">
+                                Send
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>

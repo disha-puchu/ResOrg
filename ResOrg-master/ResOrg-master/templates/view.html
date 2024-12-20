@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style_new.css' %}">
+    <link rel="icon" href="{% static 'media/folder.png' %}" type="image/x-icon"/>
+    <title>View</title>
+</head>
+<body id="resorg-container-id">
+    <div class="resorg-container">
+        <div class="resorg-container-header">
+            <div class="header-icon-container">
+                <div class="icon-container" onclick="location.href='../../'">
+                    <img height="18" src="{% static 'media/profile-page/left.png' %}">
+                </div>
+            </div>
+            <img class="ml-10" height="25" src="{% static 'media/profile-page/logo.png' %}">
+            <span class="logo-name ml-7 mr-7 fw-800 c-9800F3">ResOrg</span>
+            <div class="search-box ml-10 pd-10 w-100p br-5 dp-f ai-c">
+                {% comment %}
+                <img class="ml-5" height="18" src="{% static 'media/profile-page/search.png' %}">
+                <input class="h-100p w-100p ml-10 bn-on bct" type="search" placeholder="Search anything you want" autofocus>
+                <input class="fw-600 ml-10 h-100p mr-5 bct bn c-9800F3" type="submit" value="Search">
+                {% endcomment %}
+            </div>            
+        </div>
+        
+        <div class="resorg-container-body" id="view_scroll" style="display: flex; align-items: center; justify-content: center; overflow: auto;">
+            {% if rtype == 'img' %}
+                <img src="/media/{{user.id}}/workspace/{{rvalue}}">
+            {% endif %}
+            {% if rtype == 'ytlink' %}
+                <iframe class="item-ytplayer" style="height: 100%; width: 100%;" src="{{rvalue}}" frameborder="0" 
+                allow="encrypted-media; gyroscope; picture-in-picture; web-share" 
+                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen disabled>
+                </iframe>
+            {% endif %}
+            {% if rtype == 'pdf' %}
+                <iframe class="item-ytplayer" style="height: 100%; width: 100%;" src="https://127.0.0.1:8000/media/{{user.id}}/workspace/{{rvalue}}" frameborder="0" 
+                allow="encrypted-media; gyroscope; picture-in-picture; web-share" 
+                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen disabled>
+                </iframe>
+            {% endif %}
+        </div>
+    </div>
+
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>

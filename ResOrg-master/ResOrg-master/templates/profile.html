@@ -1,0 +1,250 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style_new.css' %}">
+    <link rel="icon" href="{% static 'media/folder.png' %}" type="image/x-icon"/>
+    <title>Profile</title>
+</head>
+<body id="resorg-container-id">
+    <div class="resorg-container">
+        <div class="resorg-container-header">
+            <div class="header-icon-container">
+                <div class="icon-container" onclick="location.href='../'">
+                    <img height="18" src="{% static 'media/profile-page/left.png' %}">
+                </div>
+            </div>
+            <img class="ml-10" height="25" src="{% static 'media/profile-page/logo.png' %}">
+            <span class="logo-name ml-7 mr-7 fw-800 c-9800F3">ResOrg</span>
+            <div class="search-box ml-10 pd-10 w-100p br-5 dp-f ai-c">
+                {% comment %}
+                <img class="ml-5" height="18" src="{% static 'media/profile-page/search.png' %}">
+                <input class="h-100p w-100p ml-10 bn-on bct" type="search" placeholder="Search anything you want" autofocus>
+                <input class="fw-600 ml-10 h-100p mr-5 bct bn c-9800F3" type="submit" value="Search">
+                {% endcomment %}
+            </div>            
+            <div class="header-right-icon-box h-100p pd-5 ml-10 dp-f jc-sb">
+                <div class="pd-7 dp-flex ai-c cp br-5 bc-9800F3" onclick="redirect_home()">
+                    <img height="18" src="{% static 'media/profile-page/home.png' %}">
+                </div>
+                <div class="pd-7 dp-flex ai-c br-5 bc-9800F3">
+                    <img height="18" src="{% static 'media/profile-page/notification.png' %}">
+                </div>
+            </div>
+        </div>
+        <div class="resorg-container-body">
+            <div class="left-section">
+                <div class="left-section-name-box dp-f ai-c bc-9800F3">
+                    <div class="left-section-name ml-15 fw-600">
+                        Account Settings
+                    </div>
+                </div>
+                <div class="pd-15">
+                    <ul class="sidenav-nav-list">
+                        <li onclick="open_popup('editprofile-popup-id')">
+                            <div class="sidebar-link-text">
+                                <img class="sidebar-icon" src="{% static 'media/sidebar-account/editprofile.png' %}" alt="Edit Profile">Edit Profile
+                            </div>
+                            <div>
+                                <img class="sidebar-icon-right" src="{% static 'media/sidebar-account/leftarrow.png' %}">
+                            </div>
+                        </li>
+                        <li onclick="open_popup('changepassword-popup-id')">
+                            <div class="sidebar-link-text">
+                                <img class="sidebar-icon" src="{% static 'media/sidebar-account/changepassword.png' %}" alt="Edit Profile">Change Password
+                            </div>
+                            <div>
+                                <img class="sidebar-icon-right" src="{% static 'media/sidebar-account/leftarrow.png' %}">
+                            </div>
+                        </li>
+                        <li>
+                            <div class="sidebar-link-text">
+                                <img class="sidebar-icon" src="{% static 'media/sidebar-account/darkmode.png' %}" alt="Edit Profile">Dark Mode
+                            </div>
+                            <div onclick="toggle_darkmode()">
+                                <img class="sidebar-icon-right" id="dark-icon" src="{% static 'media/sidebar-account/toggle-on.png' %}" alt="">
+                            </div>
+                        </li>
+                        <li>
+                            <div class="sidebar-link-text">
+                                <img class="sidebar-icon" src="{% static 'media/sidebar-account/trash.png' %}" alt="Edit Profile">Trash
+                            </div>
+                            <div>
+                                <img class="sidebar-icon-right" src="{% static 'media/sidebar-account/leftarrow.png' %}">
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="sidebar-divider">
+                        <hr class="divider-hr">
+                    </div>
+                    <ul class="sidenav-nav-list">
+                        <li>
+                            <div class="sidebar-link-text">
+                                <img class="sidebar-icon" src="{% static 'media/sidebar-account/help.png' %}" alt="Edit Profile">Help
+                            </div>
+                            <div>
+                                <img class="sidebar-icon-right" src="{% static 'media/sidebar-account/leftarrow.png' %}">
+                            </div>
+                        </li>
+                        <li>
+                            <div class="sidebar-link-text">
+                                <img class="sidebar-icon" src="{% static 'media/sidebar-account/report.png' %}" alt="Edit Profile">Report
+                            </div>
+                            <div>
+                                <img class="sidebar-icon-right" src="{% static 'media/sidebar-account/leftarrow.png' %}">
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="sidebar-divider">
+                        <hr class="divider-hr">
+                    </div>
+                    <ul class="sidenav-nav-list" onclick="open_popup('logoutmsg-popup-id')">
+                        <li>
+                            <div class="sidebar-link-text" id="sidebar-link-text-logout">
+                                <img class="sidebar-icon" id="sidebar-icon-logout" src="{% static 'media/sidebar-account/logout_1.png' %}" alt="Edit Profile">Logout
+                            </div>
+                        </li>
+                    </ul>
+                    <ul class="sidenav-nav-list" onclick="open_popup('deleteaccount-popup-id')">
+                        <li>
+                            <div class="sidebar-link-text" id="sidebar-link-text-logout">
+                                <img class="sidebar-icon" id="sidebar-icon-logout" src="{% static 'media/sidebar-account/delete_user.png' %}" alt="Edit Profile">Delete Account
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="middle-section">
+                <div class="profile-picture-box bc-9800F3">
+                    <div class="profile-picture-edit pd-10 dp-f ai-c jc-c br-100p">
+                        <img height="16" src="{% static 'media/profile-page/pencil.png' %}">
+                    </div>
+                    <div class="dp-f ai-c pd-10">
+                        <div class="profile-name ml-10 fw-600">
+                            Your Profile
+                        </div>
+                    </div>               
+                    <div class="dp-f jc-c">
+                        <div class="profile-picture ml-10 dp-f ai-c jc-c br-100p">
+                            <img height="220" src="/media/{{user.id}}/profile/{{profile_picpath}}">
+                        </div>
+                    </div>
+                </div>
+                <div class="gap-50"></div>      
+                <div class="dp-f jc-c pd-10">
+                    <div>
+                        <div class="profile-user-name dp-f jc-c fw-600">
+                            {{user.first_name}} {{user.last_name}}
+                        </div>
+                        <div class="mg-10">
+                            {{user.email}}
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <button></button>
+                </div>
+            </div>
+            <div class="right-section">
+                <div class="profile-left-section-header">
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="popup hide" id="editprofile-popup-id">
+        <div class="screen-blur"></div>
+        <div class="popup-dialog" id="editprofile-dialog-id">
+            <div class="dialog-container">
+                <div class="dialog-bottom">
+                    <form class="dialog-form" action="editprofile/" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="text" name="fname" class="dialog-form-input" placeholder="First Name" value="{{user.first_name}}">
+                        <input type="text" name="lname" class="dialog-form-input" placeholder="Last Name" value="{{user.last_name}}">
+                        <input type="email" name="email" class="dialog-form-input" placeholder="Your Email" value="{{user.email}}">
+                        <label for="" style="margin-top: 20px; margin-bottom: 5px;">Profile Picture</label>
+                        <input type="file" name="picture" class="dialog-form-input" style="margin-top: 0;">
+                        <div class="dialog-button-section">
+                            <button type="button" id="dialog-button" onclick="close_popup('editprofile-popup-id')">Cancel</button>
+                            <button id="dialog-button">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="popup hide" id="changepassword-popup-id">
+        <div class="screen-blur"></div>
+        <div class="popup-dialog" id="changepassword-dialog-id">
+            <div class="dialog-container">
+                <div class="dialog-bottom">
+                    <form class="dialog-form" action="changepassword/" method="post">
+                        {% csrf_token %}
+                        <input type="text" name="opass" class="dialog-form-input" placeholder="Old Password">
+                        <input type="password" name="npass" class="dialog-form-input" placeholder="New Password">
+                        <input type="password" name="cpass" class="dialog-form-input" placeholder="Confirm Password">
+                        <div class="dialog-button-section">
+                            <button type="button" id="dialog-button" onclick="close_popup('changepassword-popup-id')">Cancel</button>
+                            <button id="dialog-button">Change</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="popup hide" id="deleteaccount-popup-id">
+        <div class="screen-blur"></div>
+        <div class="popup-dialog" id="deleteaccount-dialog-id">
+            <div class="dialog-container">
+                <div class="dialog-top">
+                    <div class="dialog-icon">
+                        <img height="30" src="{% static 'media/warning.png' %}" alt="Dialog Icon">
+                    </div>
+                    <div class="dialog-title">
+                        <span id="form-title">Do you want to delete your account? <strong>All your data will lost.</strong></span>
+                    </div>
+                </div>
+                <div class="dialog-bottom">
+                    <form class="dialog-form" action="#" method="post">
+                        <div class="dialog-button-section">
+                            <button type="button" id="dialog-button" onclick="close_popup('deleteaccount-popup-id')">Cancel</button>
+                            <a href="deleteaccount/" id="dialog-button">Delete Account</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="popup hide" id="logoutmsg-popup-id">
+        <div class="screen-blur"></div>
+        <div class="popup-dialog" id="logout-dialog-id">
+            <div class="dialog-container">
+                <div class="dialog-top">
+                    <div class="dialog-icon">
+                        <img height="30" src="{% static 'media/warning.png' %}" alt="Dialog Icon">
+                    </div>
+                    <div class="dialog-title">
+                        <span id="form-title">Do you want to logout?</span>
+                    </div>
+                </div>
+                <div class="dialog-bottom">
+                    <div class="dialog-form" action="#" method="post">
+                        <div class="dialog-button-section">
+                            <button type="button" id="dialog-button" onclick="close_popup('logoutmsg-popup-id')">Cancel</button>
+                            <a href="/signout" id="dialog-button" onclick="redirect_logout()">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>
